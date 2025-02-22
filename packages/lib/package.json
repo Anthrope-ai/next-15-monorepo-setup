@@ -1,0 +1,36 @@
+{
+  "name": "@monorepo/lib",
+  "version": "0.0.0",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@monorepo/types": "*",
+    "@mui/material": "^6.4.0",
+    "apexcharts": "^4.4.0",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "formik": "^2.4.6",
+    "lodash": "^4.17.21",
+    "next": "^15.1.4",
+    "react": "^19.0.0",
+    "react-apexcharts": "^1.7.0",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@monorepo/eslint-config": "*",
+    "@monorepo/tailwind-config": "*",
+    "@monorepo/typescript-config": "*",
+    "typescript": "5.7.3"
+  }
+}

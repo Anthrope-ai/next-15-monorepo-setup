@@ -1,0 +1,34 @@
+{
+  "name": "@monorepo/types",
+  "version": "0.0.0",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@monorepo/lib": "*",
+    "@prisma/client": "^6.2.1",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "formik": "^2.4.6",
+    "react": "^19.0.0",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@monorepo/eslint-config": "*",
+    "@monorepo/tailwind-config": "*",
+    "@monorepo/typescript-config": "*",
+    "@types/react": "^19.0.7",
+    "typescript": "5.7.3"
+  }
+}

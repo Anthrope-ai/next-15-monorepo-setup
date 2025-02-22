@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .dockerfile
+      args:
+        PORT : 3000
+        BUILD_CONTEXT : "app"
+    ports:
+      - "3000:3000"
+  api:
+    build:
+      context: .
+      dockerfile: .dockerfile
+      args:
+        PORT: 3001
+        BUILD_CONTEXT: "api"
+    ports:
+      - "3001:3001"
