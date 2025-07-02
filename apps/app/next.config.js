@@ -5,7 +5,6 @@ const API_ORIGIN = process.env.API_ORIGIN || "http://localhost:3001";
 module.exports = {
   reactStrictMode: true,
   transpilePackages: ["@monorepo/ui"],
-  basePath: "/",
   async rewrites() {
     return [
       {
