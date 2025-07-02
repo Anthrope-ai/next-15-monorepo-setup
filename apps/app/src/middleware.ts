@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathName === "/" || pathName.endsWith("/app")) {
-    return relativeRedirect("/jobs", request);
+    return relativeRedirect("/home", request);
   }
 }
 
