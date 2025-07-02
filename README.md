@@ -28,8 +28,8 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `app`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `admin`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
+- `app`: another [Next.js 15](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
+- `api`: another [Next.js 15](https://nextjs.org/) app with Prisma and Auth0 integration
 - `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
 - `types` : a shared stub to include all shared types and interfaces of Typescript
 - `lib` : a stub to share similar business logic across application

@@ -7,6 +7,6 @@
   },
   "devDependencies": {
     "@monorepo/typescript-config": "*",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^4.1.11"
   }
 }

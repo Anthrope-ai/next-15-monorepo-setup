@@ -6,7 +6,7 @@ import React, { JSX } from "react";
 import { ToastContainer } from "react-toastify";
 import { Auth0Provider } from "@auth0/nextjs-auth0";
 import { auth0 } from "@/lib/auth0.ts";
-import { $$ } from "@monorepo/lib";
+import { $$, AnalyticsScripts } from "@monorepo/lib";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +29,7 @@ export default async function RootLayout({ children }: Props): Promise<JSX.Eleme
           {children}
           <ToastContainer position={"bottom-right"} />
         </Auth0Provider>
+        <AnalyticsScripts />
       </body>
     </html>
   );

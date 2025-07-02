@@ -1,0 +1,113 @@
+name: Deploy API (Monorepo) to Azure Web App
+
+#on:
+#  push:
+#    branches: [ main ]
+#    paths:
+#      - 'apps/api/**'
+#      - 'packages/**'
+#      - 'package.json'
+#      - 'yarn.lock'
+#  workflow_dispatch:
+
+on: workflow_dispatch
+
+env:
+  AZURE_WEBAPP_NAME: monorepoAPI                        # your Azure Web App name
+  DEPLOY_PATH: 'apps/api'
+  PORT: 8080
+  AZURE_WEBAPP_PACKAGE_PATH: './apps/api/.next/standalone' # standalone build path
+  NODE_VERSION: '20.x'
+  APP_ORIGIN: ${{ vars.APP_ORIGIN }}
+  API_ORIGIN: ${{ vars.API_ORIGIN }}
+  AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
+  APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+  AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+  AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+  AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  NEXT_PUBLIC_CLARITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_CLARITY_PROJECT_ID }}
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+  NEXT_PUBLIC_APP_ENV: ${{ vars.NEXT_PUBLIC_APP_ENV }}
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Yarn deps
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/yarn
+            .yarn/cache
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Enable Corepack for Yarn 4
+        run: corepack enable
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate Prisma client
+        working-directory: './apps/api'
+        run: yarn dlx prisma generate
+
+      - name: Build Next.js standalone
+        working-directory: ${{ env.DEPLOY_PATH }}
+        run: |
+          yarn build
+          cp -r public .next/standalone/${{ env.DEPLOY_PATH }} 2>/dev/null || true
+          cp -r .next/static .next/standalone/${{ env.DEPLOY_PATH }}/.next/ 2>/dev/null || true
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create .env.production
+        working-directory: ${{ env.DEPLOY_PATH }}
+        run: |
+          cat <<EOF > .env
+          APP_ORIGIN=${{ env.APP_ORIGIN }}
+          API_ORIGIN=${{ env.API_ORIGIN }}      
+          AUTH0_SECRET=${{ secrets.AUTH0_SECRET }}
+          APP_BASE_URL=${{ env.APP_BASE_URL }}
+          AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}
+          TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+          VERCEL_TEAM_ID=${{ secrets.VERCEL_TEAM_ID }}
+          WEBHOOK_SECRET=${{ secrets.WEBHOOK_SECRET }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_CLARITY_PROJECT_ID=${{ secrets.NEXT_PUBLIC_CLARITY_PROJECT_ID }}
+          NEXT_PUBLIC_GA_MEASUREMENT_ID=${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+          NEXT_PUBLIC_APP_ENV=${{ env.NEXT_PUBLIC_APP_ENV }}
+          EOF
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
+          package: .
+          startup-command: cd ${{ env.DEPLOY_PATH }} && node server.js
+
+      - run: echo "✅ Deployment completed successfully !! 🚀"

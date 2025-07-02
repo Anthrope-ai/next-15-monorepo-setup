@@ -1,21 +1,73 @@
 version: "3.8"
 
 services:
-  app:
+  web:
     build:
       context: .
       dockerfile: .dockerfile
       args:
         PORT : 3000
-        BUILD_CONTEXT : "app"
+        BUILD_CONTEXT : "web"
     ports:
       - "3000:3000"
+    depends_on:
+      - app
+      - admin
+      - api
+#      - apply
+  app:
+    build:
+      context: .
+      dockerfile: .dockerfile
+      args:
+        PORT : 3001
+        BUILD_CONTEXT : "app"
+    ports:
+      - "3001:3001"
+  admin:
+    build:
+      context: .
+      dockerfile: .dockerfile
+      args:
+        PORT: 3002
+        BUILD_CONTEXT: "admin"
+    ports:
+      - "3002:3002"
   api:
     build:
       context: .
       dockerfile: .dockerfile
       args:
-        PORT: 3001
+        PORT: 3003
         BUILD_CONTEXT: "api"
     ports:
-      - "3001:3001"
+      - "3003:3003"
+  apply:
+    build:
+      context: .
+      dockerfile: .dockerfile
+      args:
+        PORT: 3004
+        BUILD_CONTEXT: "apply"
+    ports:
+      - "3004:3004"
+  api-bridge:
+    build:
+      context: .
+      dockerfile: .dockerfile
+      args:
+        PORT: 3006
+        BUILD_CONTEXT: "api-bridge"
+    depends_on:
+      - rabbitmq
+    ports:
+      - "3006:3006"
+  rabbitmq:
+    image: rabbitmq:4.0.6-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_MANAGEMENT: "true"

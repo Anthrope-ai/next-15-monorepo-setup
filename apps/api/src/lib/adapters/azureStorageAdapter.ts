@@ -1,4 +1,10 @@
-import { BlobServiceClient, ContainerClient, BlockBlobClient, BlobSASPermissions, SASProtocol } from "@azure/storage-blob";
+import {
+  BlobServiceClient,
+  ContainerClient,
+  BlockBlobClient,
+  BlobSASPermissions,
+  SASProtocol
+} from "@azure/storage-blob";
 import { v4 as uuidV4 } from "uuid";
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING!;
@@ -13,7 +19,7 @@ const getContainerClient = (containerName: string): ContainerClient => {
   return blobServiceClient.getContainerClient(containerName);
 };
 
-export const uploadFile = async (file: File, container: string = "talent-tap-profile-images"): Promise<string> => {
+export const uploadFile = async (file: File, container: string): Promise<string> => {
   const containerClient = getContainerClient(container);
   const blobName = `${uuidV4()}-${file.name}`;
   const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
@@ -24,7 +30,7 @@ export const uploadFile = async (file: File, container: string = "talent-tap-pro
   return blockBlobClient.url.replace(`${containerClient.url}/`, "");
 };
 
-export const downloadFile = async (fileKey: string, container: string = "talent-tap-profile-images"): Promise<Blob> => {
+export const downloadFile = async (fileKey: string, container: string): Promise<Blob> => {
   const containerClient = getContainerClient(container);
   const blockBlobClient = containerClient.getBlockBlobClient(fileKey);
 
@@ -32,7 +38,11 @@ export const downloadFile = async (fileKey: string, container: string = "talent-
   return downloadResponse.blobBody!;
 };
 
-export const getPublicUrl = async (fileKey: string, expiry: number = 15, container: string = "talent-tap-profile-images"): Promise<string> => {
+export const getPublicUrl = async (
+  fileKey: string,
+  expiry: number = 15,
+  container: string
+): Promise<string> => {
   const containerClient = getContainerClient(container);
   const blockBlobClient = containerClient.getBlockBlobClient(fileKey);
 
@@ -44,6 +54,6 @@ export const getPublicUrl = async (fileKey: string, expiry: number = 15, contain
     permissions: BlobSASPermissions.parse("read"),
     protocol: SASProtocol.Https,
     startsOn: startsOnDate,
-    expiresOn: expiresOnDate,
+    expiresOn: expiresOnDate
   });
 };

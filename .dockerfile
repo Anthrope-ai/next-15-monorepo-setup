@@ -1,3 +1,4 @@
+# Dependencies installation layer common to all applications
 FROM node:22-alpine AS common
 
 WORKDIR source
@@ -12,9 +13,9 @@ COPY yarn.lock .
 
 COPY packages/ ./packages/
 
+
 COPY apps/api/package.json ./apps/api/
 COPY apps/app/package.json ./apps/app/
-
 
 RUN yarn install --immutable
 
@@ -24,6 +25,7 @@ WORKDIR /source/apps/api
 # Generating prisma anyway even if not api going to be built
 RUN npx prisma generate
 
+# Builder layer
 FROM node:22-alpine AS builder
 
 ARG BUILD_CONTEXT
@@ -40,6 +42,7 @@ COPY ./apps/$BUILD_CONTEXT/ ./apps/$BUILD_CONTEXT/
 
 RUN yarn build
 
+# Runner container
 FROM node:22-alpine AS runner
 
 ARG PORT

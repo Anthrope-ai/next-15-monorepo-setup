@@ -9,3 +9,5 @@ export { middlewareAddXCurrentPath } from "./src/middlewareAddXCurrentPath.ts";
 export { relativeRedirect } from "./src/relativeRedirect.ts";
 
 export * from "./src/errors/CustomError.ts";
+
+export { default as AnalyticsScripts } from "./src/AnalyticsScripts.tsx";
