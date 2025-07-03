@@ -1,7 +1,5 @@
-import { prisma } from "@/lib/prisma.ts";
 import { auth0 } from "@/lib/auth0.ts";
 import { $$, UnauthorizedError } from "@monorepo/lib";
-import { UserType } from "@prisma/client";
 
 export default function AdminOnly() {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
@@ -20,16 +18,6 @@ export default function AdminOnly() {
       if ($$.ALLOWED_ORIGINS.indexOf(emailOrigin) !== -1) {
         console.log("Access Granted");
         return originalMethod.apply(this, args);
-      }
-
-      const user = await prisma.user.findFirst({
-        where: { email: session.user.email },
-        select: { userType: true }
-      });
-
-      if (!user || user.userType !== UserType.ADMIN) {
-        console.log("Admin access breach prevented");
-        throw new UnauthorizedError();
       }
 
       console.log("Access Granted after all checks");

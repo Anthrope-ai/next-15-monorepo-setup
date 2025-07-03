@@ -2561,7 +2561,7 @@ __metadata:
     "@uidotdev/usehooks": "npm:^2.4.1"
     apexcharts: "npm:^4.4.0"
     auth0: "npm:^4.17.0"
-    axios: "npm:^1.7.9"
+    axios: "npm:^1.10.0"
     clsx: "npm:^2.1.1"
     country-list-with-dial-code-and-flag: "npm:^5.0.6"
     crypto-js: "npm:^4.2.0"
@@ -2772,6 +2772,17 @@ __metadata:
   version: 4.10.2
   resolution: "axe-core@npm:4.10.2"
   checksum: 10c0/0e20169077de96946a547fce0df39d9aeebe0077f9d3eeff4896518b96fde857f80b98f0d4279274a7178791744dd5a54bb4f322de45b4f561ffa2586ff9a09d
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "axios@npm:1.10.0"
+  dependencies:
+    follow-redirects: "npm:^1.15.6"
+    form-data: "npm:^4.0.0"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/2239cb269cc789eac22f5d1aabd58e1a83f8f364c92c2caa97b6f5cbb4ab2903d2e557d9dc670b5813e9bcdebfb149e783fb8ab3e45098635cd2f559b06bd5d8
   languageName: node
   linkType: hard
 

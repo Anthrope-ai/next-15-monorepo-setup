@@ -35,13 +35,10 @@ class User {
       data: {
         ...details,
         email: user.email,
-        skills: (details.skills as string[]) || []
       },
       omit: {
         id: true,
         deletedAt: true,
-        onboarded: true,
-        userType: true
       }
     });
   }
@@ -55,7 +52,6 @@ class User {
       omit: {
         deletedAt: true,
         updatedAt: true,
-        userType: true,
         id: true
       }
     });
@@ -72,8 +68,6 @@ class User {
       omit: {
         id: true,
         deletedAt: true,
-        onboarded: true,
-        userType: true
       }
     });
   }
@@ -104,94 +98,22 @@ class User {
       },
       data: {
         ...user,
-        skills: (details.skills as string[]) || []
       },
       omit: {
         email: true,
         deletedAt: true,
-        onboarded: true,
-        userType: true
       }
     });
-  }
-
-  async doesUserExistAndOnboarded(email: string) {
-    const user = await prisma.user.findFirst({
-      where: {
-        email,
-        deletedAt: null
-      },
-      select: {
-        onboarded: true
-      }
-    });
-
-    return {
-      exists: !!user,
-      onboarded: user?.onboarded || false
-    };
-  }
-
-  async markOnboarded(email: string) {
-    return prisma.user.update({
-      where: {
-        email,
-        deletedAt: null
-      },
-      data: {
-        onboarded: true
-      },
-      select: {
-        email: true
-      }
-    });
-  }
-
-  async isUserAdmin(email: string) {
-    const user = await prisma.user.findFirstOrThrow({
-      where: {
-        email,
-        deletedAt: null
-      },
-      select: {
-        userType: true
-      }
-    });
-
-    return user.userType === "ADMIN";
   }
 
   async getAll(page: number, name?: string, email?: string, pageSize = 20) {
-    const users = await prisma.user.findMany({
+    return prisma.user.findMany({
       ...skipTake(page, pageSize),
       where: {
         email: { startsWith: email },
         name: { contains: name }
       },
       orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
-      include: {
-        // This fetches all referral links (for each user)
-        // along with a count of applications under each link
-        referralLinks: {
-          include: {
-            _count: {
-              select: { applications: true }
-            }
-          }
-        }
-      }
-    });
-
-    // Sum up the applications across all referralLinks for each user
-    return users.map(user => {
-      const totalReferredApplications = user.referralLinks.reduce(
-        (sum, link) => sum + link._count.applications,
-        0
-      );
-      return {
-        ...user,
-        totalReferredApplications
-      };
     });
   }
 }

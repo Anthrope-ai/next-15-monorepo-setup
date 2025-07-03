@@ -1,10 +1,10 @@
-export const APP_NAME = "TalentTap";
-export const TAG_LINE = "Connect, Refer, Earn – Turn Networks into Net Worth!";
-export const COMPANY_NAME = "The Glove";
-export const COMPANY_LEGAL_NAME = "The Glove";
-export const COMPANY_URL = "https://theglove.co.in";
+export const APP_NAME = "Title";
+export const TAG_LINE = "Description";
+export const COMPANY_NAME = "Anthrope";
+export const COMPANY_LEGAL_NAME = "Anthrope Innovations Pvt. Ltd.";
+export const COMPANY_URL = "https://anthrope.ai";
 export const FOOTER_TITLE = `${APP_NAME} by ${COMPANY_NAME}`;
-export const SUPPORT_EMAIL = "developers@theglove.co.in";
+export const SUPPORT_EMAIL = "support@anthrope.ai";
 
 // Allowed email domains with admin access
-export const ALLOWED_ORIGINS = ["anthrope.ai", "theglove.co.in"];
+export const ALLOWED_ORIGINS = ["anthrope.ai"];
