@@ -14,25 +14,23 @@ export async function middleware(request: NextRequest) {
     return authRes;
   }
 
-  const resWithXPathHeader = middlewareAddXCurrentPath(request, authRes);
-
-  const session = await auth0.getSession(request);
-
-  if (!session) {
-    // Exceptions from login enforcement
-    for (let exceptionPath of exceptionPaths) {
-      if (pathName.startsWith(exceptionPath)) {
-        return resWithXPathHeader;
-      }
-    }
-
-    // user is not authenticated, redirect to login page, skipping adding basepath
-    return relativeRedirect("/auth/login", request, true);
-  }
-
-  if (pathName.includes("/verify-email")) {
-    return resWithXPathHeader;
-  }
+  // Uncomment the below code block if user should login before accessing any of the applications
+  //
+  // const resWithXPathHeader = middlewareAddXCurrentPath(request, authRes);
+  //
+  // const session = await auth0.getSession(request);
+  //
+  // if (!session) {
+  //   // Exceptions from login enforcement
+  //   for (let exceptionPath of exceptionPaths) {
+  //     if (pathName.startsWith(exceptionPath)) {
+  //       return resWithXPathHeader;
+  //     }
+  //   }
+  //
+  //   // user is not authenticated, redirect to login page, skipping adding basepath
+  //   return relativeRedirect("/auth/login", request, true);
+  // }
 
   if (pathName === "/" || pathName.endsWith("/app")) {
     return relativeRedirect("/home", request);
