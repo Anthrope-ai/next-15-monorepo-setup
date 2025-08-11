@@ -11,3 +11,5 @@ export { relativeRedirect } from "./src/relativeRedirect.ts";
 export * from "./src/errors/CustomError.ts";
 
 export { default as AnalyticsScripts } from "./src/AnalyticsScripts.tsx";
+
+export { getRelativeTime } from "./src/dates/get-relative-time.ts"
